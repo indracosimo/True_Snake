@@ -1,0 +1,3 @@
+C:\Users\Mindstage\source\repos\Shin_Snake\x64\Debug\raylib.dll
+C:\Users\Mindstage\source\repos\Shin_Snake\x64\Debug\glfw3.dll
+C:\Users\Mindstage\source\repos\Shin_Snake\Shin_Snake\x64\Debug\Shin_Sna.C5696769.Up2Date
