@@ -3,10 +3,19 @@
 #include <iostream>
 #include "raylib.h"
 #include "snake.h"
+#include <string>
+#include <vector>
 
 class Game
 {
+//
+//private:
+//	int levelMap[mapHeight][mapWidth] = {};
+
 public:
+
+	std::vector<std::string> messages;
+	void LoadMessages(const std::string& message);
 
 	Snake snake;
 

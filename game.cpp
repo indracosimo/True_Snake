@@ -1,10 +1,12 @@
 #include "game.h"
 #include "snake.h"
 #include <iostream>
+#include <fstream>
 #include <raylib.h>
 #include <deque>
 #include <raymath.h>
 #include <string>
+#include <sstream>
 
 
 
@@ -136,24 +138,19 @@ void Game::DrawMenu(GameScreen currentScreen)
 	}
 
 	////Mm vad gott. . .
-	std::string textArray[4] = { "Mm vad gott. . .","Oj vilken goding!","Smarrigt!", "Mums filibabba!"};
-	static int selectedMessageIndex = 0; // stores message
+	static int selectedMessageIndex = 0; 
 
-	if (showMessage)
+	if (showMessage && !messages.empty())
 	{
 		if (GetTime() - messageStartTime < 2.0)
 		{
-			DrawText(textArray[selectedMessageIndex].c_str(), eatenFoodX, eatenFoodY, 32, BLACK);
+			DrawText(messages[selectedMessageIndex].c_str(), eatenFoodX, eatenFoodY, 32, BLACK);
 		}
 		else
 		{
 			showMessage = false;
+			selectedMessageIndex = rand() % messages.size();
 		}
-	}
-	else
-	{
-		// new message only when showMessage is triggered again
-		selectedMessageIndex = rand() % 4;
 	}
 
 
@@ -245,5 +242,28 @@ void Game::SpawnFood()
 				break;
 			}
 		}
+	}
+}
+
+void Game::LoadMessages(const std::string& filename)
+{
+	std::ifstream file(filename);
+	if (!file.is_open()) 
+	{
+		std::cerr << "Error - Could not open " << filename << std::endl;
+		messages.push_back("No file found");
+		return;
+	}
+
+	std::string line;
+	while (getline(file, line)) 
+	{
+		messages.push_back(line);
+	}
+	file.close();
+
+	if (messages.empty()) 
+	{
+		messages.push_back("No messages available");
 	}
 }

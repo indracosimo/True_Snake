@@ -1,14 +1,20 @@
-#include<raylib.h>
-#include<iostream>
 #include"game.h"
 #include"snake.h"
-
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <ctime>
+#include<raylib.h>
+#include<iostream>
 
 using namespace std;
 
 int main() 
 {
 	Game* game = new Game();
+
+	game->LoadMessages("foodEaten.txt");
 
 	cout << "Loading..." << endl;
 	InitWindow(game->screenWidth, game->screenHeight, "Game");
@@ -18,6 +24,8 @@ int main()
 
 	SetTargetFPS(60);
 
+
+	
 	while (!WindowShouldClose())
 	{
 		game->UpdateMenu(game->currentScreen, frameCounter);
