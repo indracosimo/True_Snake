@@ -16,6 +16,8 @@ int main()
 
 	game->LoadMessages("foodEaten.txt");
 
+	game->LoadLevel(1);
+
 	cout << "Loading..." << endl;
 	InitWindow(game->screenWidth, game->screenHeight, "Game");
 
@@ -30,6 +32,7 @@ int main()
 	{
 		game->UpdateMenu(game->currentScreen, frameCounter);
 		game->DrawMenu(game->currentScreen);
+
 	}
 
 	delete game;
@@ -37,3 +40,4 @@ int main()
 
 	return 0;
 }
+
