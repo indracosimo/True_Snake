@@ -105,21 +105,33 @@ void Game::DrawMenu(GameScreen currentScreen)
 
 			DrawRectangle(0, 0, screenWidth, screenHeight, MAGENTA); //background color
 			snake.Reset();
-			centeredText = "Press Enter to play";
+			centeredText = "Press Enter to play Snake";
 			break;
 
 		case GameScreen:: GAMEPLAY:
 	
 			DrawRectangle(0, 0, screenWidth, screenHeight, VIOLET);
 			DrawTilemap();
+
+			if (score == 0) 
+			{ 
+				LoadLevel(1); 
+			}
+			else if (score == 1) 
+			{ 
+				LoadLevel(2); 
+			}
+			else if (score <= 2)
+			{
+				LoadLevel(3);
+			}
+
 			centeredText = "";			
 			DrawRectangle(foodX, foodY, 32, 32, PINK);
 			snake.DrawSnake();
 			snake.Update();		
 			CheckCollisionFood();
-
-
-			DrawText(TextFormat("Hi-Score: %d", score), screenHeight / 8, screenHeight / 16, 40, BLACK);
+			DrawText(TextFormat("Score: %d", score), screenHeight / 8, screenHeight / 16, 40, BLACK);
 			break;
 
 		case GameScreen::PAUSE:
@@ -224,7 +236,7 @@ void Game::SpawnFood()
 	//check if food is spawning in snake and reposition if true
 	bool validPosition = false;
 
-	if (!validPosition) 
+	while (!validPosition) 
 	{
 		int randomTileX = GetRandomValue(borderTileCountX, availableWidth - 1);
 		int randomTileY = GetRandomValue(borderTileCountY, availableHeight - 1);
@@ -240,6 +252,15 @@ void Game::SpawnFood()
 			{
 				validPosition = false;
 				break;
+			}
+		}
+		//prevents spawning in segments
+		if (validPosition && snake.addSegment)
+		{
+			Vector2 newSegmentPosition = Vector2Add(snake.body.front(), snake.direction);
+			if (newSegmentPosition.x * tileWidth == foodX && newSegmentPosition.y * tileHeight == foodY)
+			{
+				validPosition = false;
 			}
 		}
 	}
