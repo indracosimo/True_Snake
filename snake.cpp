@@ -82,10 +82,18 @@ void Snake::Update()
 
 }
 
-void Snake::Reset()
+//void Snake::Reset()
+//{
+//	body = { Vector2{6, 9}, Vector2{5, 9}, Vector2{4, 9} };  
+//	direction = { 1, 0 }; 
+//	nextDirection = { 1, 0 };
+//	hasMoved = false;
+//}
+
+void Snake::Reset(Vector2 initialPosition)
 {
-	body = { Vector2{6, 9}, Vector2{5, 9}, Vector2{4, 9} };  
-	direction = { 1, 0 }; 
+	body = { initialPosition, Vector2{initialPosition.x - 1, initialPosition.y}, Vector2{initialPosition.x - 2, initialPosition.y} };
+	direction = { 1, 0 };
 	nextDirection = { 1, 0 };
 	hasMoved = false;
 }

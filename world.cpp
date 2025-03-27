@@ -8,11 +8,13 @@
 #include <raymath.h>
 #include <string>
 
-const int mapWidth = 64;
-const int mapHeight = 36;
+
+extern const int mapWidth = 64;
+extern const int mapHeight = 36;
 const int tileSize = 60;
 
 int levelMap[mapHeight][mapWidth];
+
 
 
 void Game::DrawTilemap()

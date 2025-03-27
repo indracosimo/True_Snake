@@ -3,8 +3,11 @@
 #include <iostream>
 #include "raylib.h"
 #include "snake.h"
+#include "snake_p2.h"
 #include <string>
 #include <vector>
+
+
 
 class Game
 {
@@ -13,11 +16,13 @@ class Game
 //	int levelMap[mapHeight][mapWidth] = {};
 
 public:
-
+	//extern const int mapWidth;
+	//extern const int mapHeight;
 	std::vector<std::string> messages;
 	void LoadMessages(const std::string& message);
 
 	Snake snake;
+	SnakePlayer2 snakePlayer2;
 
 	Game();
 	~Game();
@@ -38,6 +43,7 @@ public:
 	double messageStartTime = 0.0;
 	bool showMessage = false;
 
+	//std::vector<std::vector<int>> levelMap;
 
 
 	//Screen definitions

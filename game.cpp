@@ -1,5 +1,6 @@
 #include "game.h"
 #include "snake.h"
+#include "snake_p2.h"
 #include <iostream>
 #include <fstream>
 #include <raylib.h>
@@ -8,7 +9,7 @@
 #include <string>
 #include <sstream>
 
-
+//int levelMap[mapHeight][mapWidth];
 
 using namespace std;
 
@@ -104,7 +105,8 @@ void Game::DrawMenu(GameScreen currentScreen)
 		case GameScreen:: TITLE:
 
 			DrawRectangle(0, 0, screenWidth, screenHeight, MAGENTA); //background color
-			snake.Reset();
+			snake.Reset(Vector2{10, 10});
+			snakePlayer2.Reset(Vector2{ -10, -10 });
 			centeredText = "Press Enter to play Snake";
 			break;
 
@@ -121,7 +123,7 @@ void Game::DrawMenu(GameScreen currentScreen)
 			{ 
 				LoadLevel(2); 
 			}
-			else if (score <= 2)
+			else if (score >= 2)
 			{
 				LoadLevel(3);
 			}
@@ -130,6 +132,8 @@ void Game::DrawMenu(GameScreen currentScreen)
 			DrawRectangle(foodX, foodY, 32, 32, PINK);
 			snake.DrawSnake();
 			snake.Update();		
+			snakePlayer2.DrawSnake();
+			snakePlayer2.Update();
 			CheckCollisionFood();
 			DrawText(TextFormat("Score: %d", score), screenHeight / 8, screenHeight / 16, 40, BLACK);
 			break;
@@ -245,7 +249,7 @@ void Game::SpawnFood()
 		foodY = randomTileY * tileHeight;
 
 		validPosition = true;
-
+		//prevents spawning in head
 		for (const auto& segment : snake.body) 
 		{
 			if (segment.x * tileWidth == foodX && segment.y * tileHeight == foodY)

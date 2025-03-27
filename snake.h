@@ -18,9 +18,9 @@ public:
 	int cellCount = 32;
 	double lastUpdateTime = 0;
 
-	void DrawSnake();
-	void Update();
-	void Reset();
+	virtual void DrawSnake();
+	virtual void Update();
+	virtual void Reset(Vector2 initialPosition);
 	bool EventTriggered(double interval);
 	bool CheckCollisionSelf();
 
