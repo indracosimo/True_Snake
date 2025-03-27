@@ -138,6 +138,7 @@
     <ClCompile Include="world.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="food.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="snake.h" />
     <ClInclude Include="snake_p2.h" />

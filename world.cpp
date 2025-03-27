@@ -34,7 +34,7 @@ void Game::DrawTilemap()
 }
 
 
-bool Snake::CheckCollisionWall()
+bool Snake::CheckCollisionWall(bool isPlayer2)
 {
 	int tileSize = 32;
 	int gridX = body[0].x;

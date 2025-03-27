@@ -1,15 +1,9 @@
 #include "game.h"
 #include "snake.h"
-#include "snake_p2.h"
-#include <iostream>
 #include <fstream>
 #include <raylib.h>
-#include <deque>
 #include <raymath.h>
-#include <string>
-#include <sstream>
 
-//int levelMap[mapHeight][mapWidth];
 
 using namespace std;
 
@@ -21,6 +15,15 @@ Game::Game()
 Game::~Game() 
 {
 	std::cout << "Game object deleted." << std::endl;
+}
+
+void Game::StartGame()
+{
+	Vector2 player1StartPos = { 6, 9 };
+	Vector2 player2StartPos = { 13, 9 };
+
+	snake.Reset(player1StartPos, false); // Player 1
+	snake2.Reset(player2StartPos, true); // Player 2
 }
 
 void Game::UpdateMenu(GameScreen& currentScreen, int& frameCounter) 
@@ -58,14 +61,16 @@ void Game::UpdateMenu(GameScreen& currentScreen, int& frameCounter)
 			currentScreen = GameScreen::TITLE;
 			cout << "Title" << endl;
 		}
-		if (snake.CheckCollisionSelf()) 
+		if (snake.CheckCollisionSelf(false) || snake2.CheckCollisionSelf(true))
 		{
 			currentScreen = GameScreen::GAMEOVER;
 		}
-		if (snake.CheckCollisionWall())
+		if (snake.CheckCollisionWall(false) || snake2.CheckCollisionWall(true))
 		{
 			currentScreen = GameScreen::GAMEOVER;
 		}
+		CheckCollisionFood(false); // player 1
+		CheckCollisionFood(true);	//player2
 		break;
 
 		break;
@@ -105,8 +110,8 @@ void Game::DrawMenu(GameScreen currentScreen)
 		case GameScreen:: TITLE:
 
 			DrawRectangle(0, 0, screenWidth, screenHeight, MAGENTA); //background color
-			snake.Reset(Vector2{10, 10});
-			snakePlayer2.Reset(Vector2{ -10, -10 });
+			snake.Reset(Vector2{6, 6}); //top left, right facing direction
+			snake2.Reset(Vector2{50, 10});
 			centeredText = "Press Enter to play Snake";
 			break;
 
@@ -130,11 +135,13 @@ void Game::DrawMenu(GameScreen currentScreen)
 
 			centeredText = "";			
 			DrawRectangle(foodX, foodY, 32, 32, PINK);
-			snake.DrawSnake();
-			snake.Update();		
-			snakePlayer2.DrawSnake();
-			snakePlayer2.Update();
-			CheckCollisionFood();
+			snake.DrawSnake(false);
+			snake.Update(false);
+			snake2.DrawSnake(true);
+			snake2.Update(true);
+			//snakePlayer2.DrawSnake();
+			//snakePlayer2.Update();
+			//CheckCollisionFood(false);
 			DrawText(TextFormat("Score: %d", score), screenHeight / 8, screenHeight / 16, 40, BLACK);
 			break;
 
@@ -180,50 +187,69 @@ void Game::DrawMenu(GameScreen currentScreen)
 	EndDrawing();
 }
 
-bool Game::CheckCollisionFood()
+bool Game::CheckCollisionFood(bool isPlayer2)
 {
-	Rectangle snakeHead = {
-		snake.body[0].x * snake.snakeCellSize,
-		snake.body[0].y * snake.snakeCellSize,
-		(float)snake.snakeCellSize,
-		(float)snake.snakeCellSize
+	Snake& currentSnake = isPlayer2 ? snake2 : snake;
+
+	Rectangle snakeHead =
+	{
+		currentSnake.body[0].x * currentSnake.snakeCellSize,
+		currentSnake.body[0].y * currentSnake.snakeCellSize,
+		(float)currentSnake.snakeCellSize,
+		(float)currentSnake.snakeCellSize
 	};
 
-	Rectangle food = { (float)foodX, (float)foodY, (float)snake.snakeCellSize, (float)snake.snakeCellSize };
+	Rectangle food = { (float)foodX, (float)foodY, (float)currentSnake.snakeCellSize, (float)currentSnake.snakeCellSize };
 
-	if (CheckCollisionRecs(snakeHead, food)) 
+	if (CheckCollisionRecs(snakeHead, food))
 	{
 		eatenFoodX = foodX;
 		eatenFoodY = foodY;
 
-		int randomIndex = GetRandomValue(0, 2);
-
 		showMessage = true;
 		messageStartTime = GetTime();
-		snake.addSegment = true;
+		currentSnake.addSegment = true;
 		SpawnFood();
 		score += 1;
 
-		cout << "Food eaten" << endl;
+		cout << "Food eaten by " << (isPlayer2 ? "Player 2" : "Player 1") << endl;
 		return true;
 	}
 	return false;
 }
 
-bool Snake::CheckCollisionSelf()
+bool Snake::CheckCollisionSelf(bool isPlayer2)
 {
-	if (!hasMoved)
-		return false;
-
-	for (int i = 1; i < body.size(); i++)
+	if (!isPlayer2) 
 	{
-		if (body[0].x == body[i].x && body[0].y == body[i].y)
+		if (!hasMoved)
+			return false;
+
+		for (int i = 1; i < body.size(); i++)
 		{
-			cout << "Game Over - Collided with self" << endl;
-			return true;
+			if (body[0].x == body[i].x && body[0].y == body[i].y)
+			{
+				cout << "Game Over - Collided with self" << endl;
+				return true;
+			}
 		}
+		return false;
 	}
-	return false;
+	else 
+	{
+		if (!hasMoved)
+			return false;
+
+		for (int i = 1; i < body.size(); i++)
+		{
+			if (body[0].x == body[i].x && body[0].y == body[i].y)
+			{
+				cout << "Game Over - Collided with self" << endl;
+				return true;
+			}
+		}
+		return false;
+	}
 }
 
 void Game::SpawnFood()

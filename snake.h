@@ -13,16 +13,18 @@ public:
 	Vector2 nextDirection; //used to store the next direction the snake will move in, otherwise you can quickly press keys and bypass movement restrictions
 	bool addSegment = false;
 	bool hasMoved = false;
+	Color snakeColor = LIME;
+	Color snakeColor2 = MAROON;
 
 	int snakeCellSize = 32;
 	int cellCount = 32;
 	double lastUpdateTime = 0;
 
-	virtual void DrawSnake();
-	virtual void Update();
-	virtual void Reset(Vector2 initialPosition);
-	bool EventTriggered(double interval);
-	bool CheckCollisionSelf();
+	void DrawSnake(bool isPlayer2);
+	void Update(bool isPlayer2);
+	void Reset(Vector2 initialPosition, bool isPlayer2 = false);
 
-	bool CheckCollisionWall();
+	bool EventTriggered(double interval);
+	bool CheckCollisionSelf(bool isPlayer2);
+	bool CheckCollisionWall(bool isPlayer2);
 };
